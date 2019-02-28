@@ -46,14 +46,34 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Main.cs">
+    <Compile Include="Forms\AgreeForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Main.Designer.cs">
-      <DependentUpon>Main.cs</DependentUpon>
+    <Compile Include="Forms\AgreeForm.Designer.cs">
+      <DependentUpon>AgreeForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\btnSet.cs" />
+    <Compile Include="Modules\comboboxSet.cs" />
+    <Compile Include="Modules\Commons.cs" />
+    <Compile Include="Modules\DateSet.cs" />
+    <Compile Include="Modules\lbSet.cs" />
+    <Compile Include="Modules\lvSet.cs" />
+    <Compile Include="Modules\pictureBoxSet.cs" />
+    <Compile Include="Modules\pnSet.cs" />
+    <Compile Include="Modules\richtb.cs" />
+    <Compile Include="Modules\tbSet.cs" />
+    <Compile Include="Modules\Create.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Forms\MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
