@@ -83,6 +83,7 @@ namespace WindowsFormsApp
         {
             CheckBox chbox = new CheckBox();
             chbox.Name = ch.Name;
+            chbox.Text = ch.Text;
             chbox.Size = new Size(ch.SX, ch.SY);
             chbox.Location = new Point(ch.PX, ch.PY);
             ch.Form.Controls.Add(chbox);

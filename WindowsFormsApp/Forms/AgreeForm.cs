@@ -12,14 +12,15 @@ using System.Windows.Forms;
 namespace WindowsFormsApp
 {
     public partial class AgreeForm : Form
-    {//1100, 900
-        Commons cm = new Commons();
+    {//1100, 800
+        
         Create ct = new Create();
         Label top;
-        Panel head,body;
+        MainForm mf;
+        Panel head;
         ArrayList label_list;
         RichTextBox service_box, info_box, apply_box;
-        CheckBox service_check, info_check, apply_check;
+        CheckBox service_check, info_check, apply_check,all_check;
         Button next;
 
         string service_string = string.Format("제 1장 총칙 \n\n 제 1 조(목적) \n\n① 이 약관은 배출예약시스템(http://www.15990903.or.kr) 사이트(이하 '당 사이트'라 함)가 제공하는 모든 서비스(이하 \"서비스\")의 가입 및 이용조건/절차, 이용자와 당 사이트의 권리, 의무, 책임사항과 기타 필요한 사항을 규정함을 목적으로 합니다."+
@@ -43,6 +44,14 @@ namespace WindowsFormsApp
             Load += AgreeForm_Load;
         }
 
+        public AgreeForm(MainForm mf)
+        {
+            InitializeComponent();
+            Load += AgreeForm_Load;
+            this.mf = mf;
+
+        }
+
         private void AgreeForm_Load(object sender, EventArgs e)
         {
             View();
@@ -50,7 +59,7 @@ namespace WindowsFormsApp
  
         public void View()
         {
-            pnSet pn1 = new pnSet(this, 1200, 900, 0, 0);
+            pnSet pn1 = new pnSet(this, 1200, 800, 0, 0);
             head = ct.panel(pn1);
             Controls.Add(head);
             
@@ -58,7 +67,6 @@ namespace WindowsFormsApp
             top = ct.label(lb1);
             top.Font = new Font("Verdana", 20.5f, FontStyle.Bold);
             head.Controls.Add(top);
-
             label_list= new ArrayList();
             label_list.Add(new lbSet(this,"first" ,"약관동의" , 200, 50, 50,50,15));
             label_list.Add(new lbSet(this, "second", "기본정보 입력", 200,50,300,50,15));
@@ -68,23 +76,16 @@ namespace WindowsFormsApp
             for(int i = 0; i < label_list.Count; i++)
             {
                 Label label = ct.label((lbSet)label_list[i]);
-                label.BackColor = Color.Beige;
+                if (i == 0)
+                {
+                    label.BackColor = Color.Beige;
+                }
+                
                 label.Font = new Font("Verdana", 15.5f, FontStyle.Bold);
-                label.TextAlign = ContentAlignment.TopCenter;
+                label.TextAlign = ContentAlignment.MiddleCenter;
                 head.Controls.Add(label);
             }
-            label_list = new ArrayList();
-            label_list.Add(new lbSet(this, "service", "▶ 서비스 약관(필수)", 930, 30, 50, 120, 14));
-            label_list.Add(new lbSet(this, "info", "▶ 개인정보 이용 동의(필수)", 430, 30, 50, 390, 14));
-            label_list.Add(new lbSet(this, "apply", "▶ 개인정보 제 3자 제공 동의(필수)", 430, 30, 550, 390, 14));
-            for (int i = 0; i < label_list.Count; i++)
-            {
-                Label label = ct.label((lbSet)label_list[i]);
-                label.BackColor = Color.Beige;
-                label.Font = new Font("Verdana", 12.5f, FontStyle.Bold);
-                label.TextAlign = ContentAlignment.TopCenter;
-                head.Controls.Add(label);
-            }
+            
             richtbSet rt1 = new richtbSet(this,"service_text",950,200,50,170);
             service_box = ct.richbox(rt1);
             service_box.ReadOnly=true;
@@ -108,19 +109,63 @@ namespace WindowsFormsApp
             apply_box.Text = apply_string;
             head.Controls.Add(apply_box);
 
-            checkedSet ch1 = new checkedSet(this, "service_check", 50, 50, 990, 110);
+            checkedSet ch1 = new checkedSet(this, "service", "▶ 서비스 약관(필수)", 950, 50, 50, 120);
             service_check = ct.checkbox(ch1);
+            service_check.CheckAlign = ContentAlignment.MiddleRight;
             head.Controls.Add(service_check);
-            
-            btnSet bt1 = new btnSet(this, "next", "다음단계", 100, 50, 960, 800, btn_next_click);
+
+            checkedSet ch2 = new checkedSet(this, "info", "▶ 개인정보 이용 동의(필수)", 450, 50, 50, 390);
+            info_check = ct.checkbox(ch2);
+            info_check.CheckAlign = ContentAlignment.MiddleRight;
+            head.Controls.Add(info_check);
+
+            checkedSet ch3 = new checkedSet(this, "apply", "▶ 개인정보 제 3자 제공 동의(필수)", 450, 50, 550, 390);
+            apply_check = ct.checkbox(ch3);
+            apply_check.CheckAlign = ContentAlignment.MiddleRight;
+            head.Controls.Add(apply_check);
+
+            checkedSet ch4 = new checkedSet(this, "all", "전체동의", 100, 50, 490, 650);
+            all_check = ct.checkbox(ch4);
+            all_check.CheckedChanged+= check_all_click;
+            head.Controls.Add(all_check);
+
+            btnSet bt1 = new btnSet(this, "next", "다음단계", 100, 50, 960, 700, btn_next_click);
             next = ct.btn(bt1);
             head.Controls.Add(next);
             
         }
+        private void check_all_click(object sender, EventArgs e)
+        {
+            if (all_check.Checked)
+            {
+                service_check.Checked = true;
+                info_check.Checked = true;
+                apply_check.Checked = true;
+            }
+            else
+            {
+                service_check.Checked = false;
+                info_check.Checked = false;
+                apply_check.Checked = false;
+            }
+        }
         
         private void btn_next_click(object sender, EventArgs e)
         {
-            
+            if (service_check.Checked&& info_check.Checked&& apply_check.Checked)
+            {
+                Information info = new Information();
+                info.MdiParent = ParentForm; // 자식1을 자식2를 위한 
+                info.WindowState = FormWindowState.Maximized;
+                info.FormBorderStyle = FormBorderStyle.None;
+                //this.Dispose();
+                head.Controls.Add(info);
+                info.Show();
+            }
+            else
+            {
+                MessageBox.Show("세가지 이용에 동의하여주십시오.");
+            }
         }
 
         public void Point(RichTextBox rt, int line_number,int size)

@@ -10,12 +10,13 @@ namespace WindowsFormsApp
     class checkedSet
     {
     Form form;
-        string name;
+        string name,text;
         int sX, sY, pX, pY;
-        public checkedSet(Form form, string name, int sX, int sY, int pX, int pY)
+        public checkedSet(Form form, string name,string text, int sX, int sY, int pX, int pY)
         {
             this.form = form;
             this.name = name;
+            this.text = text;
             this.sX = sX;
             this.sY = sY;
             this.pX = pX;
@@ -28,6 +29,10 @@ namespace WindowsFormsApp
         public string Name
         {
             get { return name; }
+        }
+        public string Text
+        {
+            get { return text; }
         }
         public int SX
         {

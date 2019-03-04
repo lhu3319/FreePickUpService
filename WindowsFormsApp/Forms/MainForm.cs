@@ -17,7 +17,7 @@ namespace WindowsFormsApp
         Create ct = new Create();
         Button book, check;
         Panel head,body;
-        public MainForm() // size 1200, 900
+        public MainForm() // size 1200, 800
         {
             InitializeComponent();
             Load += Main_Load;
@@ -26,19 +26,20 @@ namespace WindowsFormsApp
         private void Main_Load(object sender, EventArgs e)
         {
             this.Text = "수거예약 서비스 프로그램";
-            this.Size = new Size(1200, 900);
+            this.Size = new Size(1200, 800);
             this.IsMdiContainer = true;
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
             View();
         }
         
         public void View()
         {
-            pnSet pn1 = new pnSet(this,100,900,0,0);
+            pnSet pn1 = new pnSet(this,100,800,0,0);
             head = ct.panel(pn1);
             Controls.Add(head);
 
-            pnSet pn2 = new pnSet(this, 1100, 900, 100, 0);
+            pnSet pn2 = new pnSet(this, 1100, 800, 100, 0);
             body = ct.panel(pn2);
             Controls.Add(body);
 
@@ -50,18 +51,17 @@ namespace WindowsFormsApp
             check = ct.btn(bs2);
             head.Controls.Add(check);
 
-
+            
         }
 
         private void btn_Book_click(object sender, EventArgs e)
         {
-            AgreeForm af = new AgreeForm();
+            AgreeForm af = new AgreeForm(this);
             af.MdiParent = this;
             af.WindowState = FormWindowState.Maximized;
             af.FormBorderStyle = FormBorderStyle.None;
             body.Controls.Add(af);
             af.Show();
-
         }
     }
 }
