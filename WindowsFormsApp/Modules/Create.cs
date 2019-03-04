@@ -69,7 +69,7 @@ namespace WindowsFormsApp
             return txtbox;
         }
         //리치텍스트박스
-        public RichTextBox richbox(Richtb rt)
+        public RichTextBox richbox(richtbSet rt)
         {
             RichTextBox rtxtbox = new RichTextBox();
             rtxtbox.Multiline = true;
@@ -78,6 +78,15 @@ namespace WindowsFormsApp
             rtxtbox.Location = new Point(rt.PX, rt.PY);
             rt.Form.Controls.Add(rtxtbox);
             return rtxtbox;
+        }
+        public CheckBox checkbox(checkedSet ch)
+        {
+            CheckBox chbox = new CheckBox();
+            chbox.Name = ch.Name;
+            chbox.Size = new Size(ch.SX, ch.SY);
+            chbox.Location = new Point(ch.PX, ch.PY);
+            ch.Form.Controls.Add(chbox);
+            return chbox;
         }
         //리스트뷰
         public ListView listview(lvSet lv)

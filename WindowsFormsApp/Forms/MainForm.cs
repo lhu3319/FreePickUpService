@@ -17,7 +17,7 @@ namespace WindowsFormsApp
         Create ct = new Create();
         Button book, check;
         Panel head,body;
-        public MainForm() // size 1200, 700
+        public MainForm() // size 1200, 900
         {
             InitializeComponent();
             Load += Main_Load;
@@ -26,7 +26,7 @@ namespace WindowsFormsApp
         private void Main_Load(object sender, EventArgs e)
         {
             this.Text = "수거예약 서비스 프로그램";
-            this.Size = new Size(1200, 700);
+            this.Size = new Size(1200, 900);
             this.IsMdiContainer = true;
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
             View();
@@ -34,11 +34,11 @@ namespace WindowsFormsApp
         
         public void View()
         {
-            pnSet pn1 = new pnSet(this,100,700,0,0);
+            pnSet pn1 = new pnSet(this,100,900,0,0);
             head = ct.panel(pn1);
             Controls.Add(head);
 
-            pnSet pn2 = new pnSet(this, 1100, 700, 100, 0);
+            pnSet pn2 = new pnSet(this, 1100, 900, 100, 0);
             body = ct.panel(pn2);
             Controls.Add(body);
 

@@ -7,12 +7,12 @@ using System.Windows.Forms;
 
 namespace WindowsFormsApp
 {
-    class Richtb
+    class checkedSet
     {
-        Form form;
+    Form form;
         string name;
         int sX, sY, pX, pY;
-        public Richtb(Form form, string name, int sX, int sY, int pX, int pY)
+        public checkedSet(Form form, string name, int sX, int sY, int pX, int pY)
         {
             this.form = form;
             this.name = name;
