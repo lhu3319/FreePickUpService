@@ -18,6 +18,7 @@ namespace WindowsFormsApp
         Label top,warning,content,name,pnumber,number,addr,home,outdate,memo;
         RichTextBox name_box, pnb_box1, pnb_box2, pnb_box3, nb_box1, nb_box2, nb_box3, addr_box, road_box, memo_box;
         ArrayList label_list;
+        richtbSet rb1;
         //RichTextBox ;
         public Information()
         {
@@ -67,27 +68,101 @@ namespace WindowsFormsApp
 
             //name,pnumber,number,addr,home,outdate,memo
             label_list = new ArrayList();
-            label_list.Add(new lbSet(this, "name", "이름(*)", 90, 50, 50, 220, 10));
+            label_list.Add(new lbSet(this, "name", "이름\n(*)", 90, 50, 50, 220, 10));
             label_list.Add(new lbSet(this, "pnumber", "휴대폰번호(*)", 90, 50, 50, 280, 10));
-            label_list.Add(new lbSet(this, "number", "전화번호", 90, 50, 50, 330, 10));
-            label_list.Add(new lbSet(this, "addr", "주소(*)", 90, 100, 50, 380, 10));
-            label_list.Add(new lbSet(this, "home", "주거방법", 90, 50, 50, 430, 10));
-            label_list.Add(new lbSet(this, "outdate", "배출희망날짜", 90, 50, 50, 480, 10));
-            label_list.Add(new lbSet(this, "memo", "메모", 90, 50, 50, 530, 10));
+            label_list.Add(new lbSet(this, "number", "전화번호", 90, 50, 50, 340, 10));
+            label_list.Add(new lbSet(this, "addr", "주소\n(*)", 90, 130, 50, 400, 10));
+            label_list.Add(new lbSet(this, "home", "주거방법", 90, 50, 50, 540, 10));
+            label_list.Add(new lbSet(this, "outdate", "배출희망날짜(*)", 90, 50, 50, 600, 10));
+            label_list.Add(new lbSet(this, "memo", "메모", 90, 50, 50, 660, 10));
 
-            for(int i = 0; i < label_list.Count; i++)
+            
+            for (int i = 0; i < label_list.Count; i++)
             {
                 Label label = ct.label((lbSet)label_list[i]);
                 if (i == 3)
                 {
                     label.BackColor = Color.Bisque;
                 }
+                else if (i == 7 || i == 8)
+                {
+                    label.Font = new Font("Verdana", 9.5f, FontStyle.Bold);
+                    label.TextAlign = ContentAlignment.MiddleCenter;
+                }
                 label.Font = new Font("Verdana", 11.5f, FontStyle.Bold);
                 label.TextAlign = ContentAlignment.MiddleCenter;
                 head.Controls.Add(label);
             }
+            label_list = new ArrayList();
+            label_list.Add(new lbSet(this, "hipen1", "-", 10, 30, 218, 290, 10));
+            label_list.Add(new lbSet(this, "hipen2", "-", 10, 30, 295, 290, 10));
+            label_list.Add(new lbSet(this, "hipen3", "-", 10, 30, 218, 340, 10));
+            label_list.Add(new lbSet(this, "hipen4", "-", 10, 30, 295, 340, 10));
+            for (int i=0; i < label_list.Count; i++)
+            {
+                Label label = ct.label((lbSet)label_list[i]);
+                label.Font = new Font("Verdana", 9.5f, FontStyle.Bold);
+                label.TextAlign = ContentAlignment.MiddleCenter;
+                head.Controls.Add(label);
+            }
+            //RichTextBox name_box, pnb_box1, pnb_box2, pnb_box3, nb_box1, nb_box2, nb_box3, addr_box, road_box, memo_box;
+            rb1 = new richtbSet(this, "name_box", 220, 30, 150, 230);
+            name_box = ct.richbox(rb1);
+            name_box.Font = new Font("Verdana", 13.5f, FontStyle.Bold);
+            name_box.MaxLength = 4;
+            head.Controls.Add(name_box);
 
+            rb1 = new richtbSet(this, "pnb_box3", 65, 30, 150, 290);
+            pnb_box1 = ct.richbox(rb1);
+            pnb_box1.Font = new Font("Verdana", 13.5f, FontStyle.Bold);
+            pnb_box1.KeyPress += Tb_KeyPress;
+            pnb_box1.MaxLength = 3;
+            head.Controls.Add(pnb_box1);
             
+            rb1 = new richtbSet(this, "pnb_box2", 65, 30, 228, 290);
+            pnb_box2 = ct.richbox(rb1);
+            pnb_box2.Font = new Font("Verdana", 13.5f, FontStyle.Bold);
+            pnb_box2.KeyPress += Tb_KeyPress;
+            pnb_box2.MaxLength = 4;
+            head.Controls.Add(pnb_box2);
+            
+            rb1 = new richtbSet(this, "pnb_box3",65, 30, 305, 290);
+            pnb_box3 = ct.richbox(rb1);
+            pnb_box3.Font = new Font("Verdana", 13.5f, FontStyle.Bold);
+            pnb_box3.KeyPress += Tb_KeyPress;
+            pnb_box3.MaxLength = 4;
+            head.Controls.Add(pnb_box3);
+
+            rb1 = new richtbSet(this, "nb_box1", 65, 30, 150, 340);
+            nb_box1 = ct.richbox(rb1);
+            nb_box1.Font = new Font("Verdana", 13.5f, FontStyle.Bold);
+            nb_box1.KeyPress += Tb_KeyPress;
+            nb_box1.MaxLength = 3;
+            head.Controls.Add(nb_box1);
+
+            rb1 = new richtbSet(this, "nb_box2", 65, 30, 228, 340);
+            nb_box2 = ct.richbox(rb1);
+            nb_box2.Font = new Font("Verdana", 13.5f, FontStyle.Bold);
+            nb_box2.KeyPress += Tb_KeyPress;
+            nb_box2.MaxLength = 4;
+            head.Controls.Add(nb_box2);
+
+            rb1 = new richtbSet(this, "nb_box3", 65, 30, 305, 340);
+            nb_box3 = ct.richbox(rb1);
+            nb_box3.Font = new Font("Verdana", 13.5f, FontStyle.Bold);
+            nb_box3.KeyPress += Tb_KeyPress;
+            nb_box3.MaxLength = 4;
+            head.Controls.Add(nb_box3);
+        }
+
+        private void Tb_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            RichTextBox tb = (RichTextBox)sender;
+            tb.ForeColor = Color.Black;
+            if (!(char.IsDigit(e.KeyChar) || e.KeyChar == Convert.ToChar(Keys.Back) || e.KeyChar == '-'))
+            {
+                e.Handled = true;
+            }
         }
     }
 }
