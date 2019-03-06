@@ -59,7 +59,7 @@ namespace WindowsFormsApp
  
         public void View()
         {
-            pnSet pn1 = new pnSet(this, 1200, 800, 0, 0);
+            pnSet pn1 = new pnSet(this, 1200, 900, 0, 0);
             head = ct.panel(pn1);
             Controls.Add(head);
             
