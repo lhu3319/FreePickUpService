@@ -33,6 +33,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -52,6 +55,12 @@
     <Compile Include="Forms\AgreeForm.Designer.cs">
       <DependentUpon>AgreeForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\ChoiceForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ChoiceForm.Designer.cs">
+      <DependentUpon>ChoiceForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Information.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -64,6 +73,12 @@
     <Compile Include="Forms\MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\SearchAddrForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\SearchAddrForm.Designer.cs">
+      <DependentUpon>SearchAddrForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Modules\btnSet.cs" />
     <Compile Include="Modules\checkedSet.cs" />
     <Compile Include="Modules\comboboxSet.cs" />
@@ -73,9 +88,11 @@
     <Compile Include="Modules\lvSet.cs" />
     <Compile Include="Modules\pictureBoxSet.cs" />
     <Compile Include="Modules\pnSet.cs" />
+    <Compile Include="Modules\rbSet.cs" />
     <Compile Include="Modules\richtbSet.cs" />
     <Compile Include="Modules\tbSet.cs" />
     <Compile Include="Modules\Create.cs" />
+    <Compile Include="Modules\Webapi.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Forms\MainForm.resx">
@@ -90,6 +107,7 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

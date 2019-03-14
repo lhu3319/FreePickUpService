@@ -27,6 +27,7 @@ namespace WindowsFormsApp
         ComboBox home, elevator;
         MainForm mf;
         DateTimePicker date;
+        string today = DateTime.Now.ToString("yyyy-MM-dd"); // 오늘날짜 비교용
         //RichTextBox ;
         public Information()
         {
@@ -233,8 +234,9 @@ namespace WindowsFormsApp
             head.Controls.Add(elevator);
 
             DateSet ds1 = new DateSet(this, "date", 170, 30, 160, 650);
-            date = ct.datepic(ds1);
+            date = ct.datepic(ds1); 
             date.Font = new Font("Verdana", 11.5f);
+            date.MinDate = DateTime.Today;
             head.Controls.Add(date);
 
             rb1 = new richtbSet(this, "memo", 420, 30, 160, 700);
@@ -269,18 +271,47 @@ namespace WindowsFormsApp
         }
         private void Search_click(object sender, EventArgs e)
         {
-            
+            SearchAddrForm saf = new SearchAddrForm();
+            saf.ShowDialog();
         }
         private void next_click(object sender, EventArgs e)
         {
-
+            string date_text = date.Text.Substring(0, 10);
+            if (name_box.Text == "")
+            {
+                MessageBox.Show("이름을 입력해주세요.");
+                
+            }/*
+            else if (pnb_box1.Text == "" || pnb_box2.Text == "" || pnb_box3.Text == "")
+            {
+                MessageBox.Show("휴대폰 번호를 입력해주세요");
+            }
+            else if (addr_box.Text == "" || road_box.Text == "" || detail_box.Text == "")
+            {
+                MessageBox.Show("주소를 입력해주세요");
+            }
+            else if(today == date_text)
+            {
+                MessageBox.Show("당일에는 예약이 불가능합니다");
+            }*/
+            else
+            {
+                ChoiceForm cf = new ChoiceForm();
+                cf.TopLevel = false;
+                //cf.MdiParent = ParentForm;
+                cf.WindowState = FormWindowState.Maximized;
+                cf.FormBorderStyle = FormBorderStyle.None;
+                head.Controls.Add(cf);
+                cf.Show();
+            }
         }
         private void behind_click(object sender, EventArgs e)
         {
             AgreeForm af = new AgreeForm();
-            af.MdiParent = ParentForm; // 자식1을 자식2를 위한 
+            af.TopLevel = false;
             af.WindowState = FormWindowState.Maximized;
             af.FormBorderStyle = FormBorderStyle.None;
+            this.Visible = false;
             head.Controls.Add(af);
             af.Show();
         }

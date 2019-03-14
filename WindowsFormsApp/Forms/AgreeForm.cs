@@ -43,15 +43,14 @@ namespace WindowsFormsApp
             InitializeComponent();
             Load += AgreeForm_Load;
         }
-
+        
         public AgreeForm(MainForm mf)
         {
             InitializeComponent();
             Load += AgreeForm_Load;
             this.mf = mf;
-
         }
-
+        
         private void AgreeForm_Load(object sender, EventArgs e)
         {
             View();
@@ -129,7 +128,7 @@ namespace WindowsFormsApp
             all_check.CheckedChanged+= check_all_click;
             head.Controls.Add(all_check);
 
-            btnSet bt1 = new btnSet(this, "next", "다음단계", 100, 50, 960, 700, btn_next_click);
+            btnSet bt1 = new btnSet(this, "next", "다음단계", 100, 50, 960, 750, btn_next_click);
             next = ct.btn(bt1);
             head.Controls.Add(next);
             
@@ -154,11 +153,11 @@ namespace WindowsFormsApp
         {
             if (service_check.Checked&& info_check.Checked&& apply_check.Checked)
             {
+                //this.Visible = false;
                 Information info = new Information();
                 info.MdiParent = ParentForm; // 자식1을 자식2를 위한 
                 info.WindowState = FormWindowState.Maximized;
                 info.FormBorderStyle = FormBorderStyle.None;
-                //this.Dispose();
                 head.Controls.Add(info);
                 info.Show();
             }

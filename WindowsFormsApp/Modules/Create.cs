@@ -138,5 +138,14 @@ namespace WindowsFormsApp
             return combobox;
         }
         
+        //라디오버튼
+        public RadioButton radio(rbSet rs)
+        {
+            RadioButton rb = new RadioButton();
+            rb.Name = rs.Name;
+            rb.Text = rs.Text;
+            rb.Location = new Point(rs.PX, rs.PY);
+            return rb;
+        }
     }
 }
