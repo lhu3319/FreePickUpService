@@ -17,7 +17,8 @@ namespace WindowsFormsApp
         Create ct = new Create();
         Panel head;
         Label top, warning, content, addr, raddr;
-        RichTextBox name_box, pnb_box1, pnb_box2, pnb_box3, nb_box1, nb_box2, nb_box3, addr_box, road_box, detail_box, memo_box;
+        RichTextBox name_box, pnb_box1, pnb_box2, pnb_box3, nb_box1, nb_box2, nb_box3,detail_box, memo_box;
+        public RichTextBox addr_box, road_box;
         ArrayList label_list;
         lbSet lb1;
         richtbSet rb1;
@@ -271,7 +272,9 @@ namespace WindowsFormsApp
         }
         private void Search_click(object sender, EventArgs e)
         {
-            SearchAddrForm saf = new SearchAddrForm();
+            addr_box.Text = "";
+            road_box.Text = "";
+            SearchAddrForm saf = new SearchAddrForm(this);
             saf.ShowDialog();
         }
         private void next_click(object sender, EventArgs e)
@@ -296,24 +299,14 @@ namespace WindowsFormsApp
             }*/
             else
             {
-                ChoiceForm cf = new ChoiceForm();
-                cf.TopLevel = false;
-                //cf.MdiParent = ParentForm;
-                cf.WindowState = FormWindowState.Maximized;
-                cf.FormBorderStyle = FormBorderStyle.None;
-                head.Controls.Add(cf);
-                cf.Show();
+                mf.step = 2;
+                this.Dispose();
             }
         }
         private void behind_click(object sender, EventArgs e)
         {
-            AgreeForm af = new AgreeForm();
-            af.TopLevel = false;
-            af.WindowState = FormWindowState.Maximized;
-            af.FormBorderStyle = FormBorderStyle.None;
-            this.Visible = false;
-            head.Controls.Add(af);
-            af.Show();
+            mf.step = 0;
+            this.Dispose();
         }
     }
 }

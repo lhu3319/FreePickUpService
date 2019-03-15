@@ -17,6 +17,9 @@ namespace WindowsFormsApp
         Create ct = new Create();
         Button book, check;
         Panel head,body;
+        Form form;
+        public int step = 0;
+
         public MainForm() // size 1200, 900
         {
             InitializeComponent();
@@ -30,12 +33,19 @@ namespace WindowsFormsApp
             this.IsMdiContainer = true;
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
+            this.FormClosing += MainForm_FormClosing;
             View();
         }
-        
+
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            step = -1;
+            if (form != null) form.Dispose();
+        }
+
         public void View()
         {
-            pnSet pn1 = new pnSet(this,100,900,0,0);
+            pnSet pn1 = new pnSet(this, 100, 900, 0, 0);
             head = ct.panel(pn1);
             Controls.Add(head);
 
@@ -47,21 +57,48 @@ namespace WindowsFormsApp
             book = ct.btn(bs1);
             head.Controls.Add(book);
 
-            btnSet bs2 = new btnSet(this, "check", "예약조회·변경",100,100,0,200, btn_Book_click);
+            btnSet bs2 = new btnSet(this, "check", "예약조회·변경", 100, 100, 0, 200, btn_Book_click);
             check = ct.btn(bs2);
             head.Controls.Add(check);
-
+        }
             
+
+            private void btn_Book_click(object sender, EventArgs e)
+        {
+            step = 0;
+            CheckForm();
         }
 
-        private void btn_Book_click(object sender, EventArgs e)
+        private void CheckForm()
         {
-            AgreeForm af = new AgreeForm(this);
-            af.MdiParent = this;
-            af.WindowState = FormWindowState.Maximized;
-            af.FormBorderStyle = FormBorderStyle.None;
-            body.Controls.Add(af);
-            af.Show();
+            
+            switch (step)
+            {
+                case 0:
+                    form = new AgreeForm(this);
+                    break;
+                case 1:
+                    form = new Information(this);
+                    break;
+                case 2:
+                    form = new ChoiceForm(this);
+                    break;
+                default:
+                    body.Controls.Clear();
+                    step = 0;
+                    return;
+            }
+            form.MdiParent = this;
+            form.WindowState = FormWindowState.Maximized;
+            form.FormBorderStyle = FormBorderStyle.None;
+            body.Controls.Add(form);
+            form.Show();
+            form.Disposed += Form_Disposed;
+        }
+
+        private void Form_Disposed(object sender, EventArgs e)
+        {
+            CheckForm();
         }
     }
 }

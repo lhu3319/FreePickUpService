@@ -8,6 +8,8 @@ namespace WindowsFormsApp
 {
     static class Program
     {
+        public static string URL = "http://localhost:5000";
+
         /// <summary>
         /// 해당 응용 프로그램의 주 진입점입니다.
         /// </summary>
@@ -16,7 +18,7 @@ namespace WindowsFormsApp
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new ChoiceForm());
+            Application.Run(new MainForm());
         }
     }
 }

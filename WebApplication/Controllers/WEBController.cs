@@ -16,19 +16,11 @@ namespace WebApplication.Controllers
         MYsql db;
         // GET: api/<controller>
         [HttpPost]
-        public ActionResult<ArrayList> Select([FromForm] string spName, [FromForm] string no)
+        public ActionResult<ArrayList> Select([FromForm] string spName, [FromForm] int no)
         {
             Console.WriteLine("spName : {0}, no : {1}", spName, no);
             Hashtable ht = new Hashtable();
-            if (!String.IsNullOrEmpty(no))
-            {
-                Console.WriteLine("----------------------------------------------");
-                Console.WriteLine("---------------------------------------------"+no);
-                string[] str = no.Split(":");
-                Console.WriteLine("!!!!!!!!!!" + str[0]);
-                ht.Add(str[0], str[1]);
-                Console.WriteLine("11111");
-            }
+            ht.Add("_Upno", no);            
 
             db = new MYsql();
             MySqlDataReader sdr = db.Reader(spName, ht);

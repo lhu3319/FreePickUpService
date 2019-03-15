@@ -1,0 +1,70 @@
+﻿<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>다음 주소검색</title>
+    <link href="//t1.daumcdn.net/postcode/resource/images/favicon.ico" rel="shortcut icon">
+  </head>
+  <body>
+    <div id="wrap" style="border:1px solid;width:100%;height:600px;margin:5px 0;position:relative"></div>
+    <div id="result" style="display:none;">
+      <hr>
+      <h3>검색 후 받아 오는 값</h3>
+      <input type="text" name="extraAddr" id="extraAddr" readonly placeholder="도로명"><br>
+      <input type="text" name="zonecode" id="zonecode" readonly placeholder="지역코드"><br>
+      <input type="text" name="addr" id="addr" readonly placeholder="주소"><br>
+    </div>
+    <script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
+    <script>
+        function sample3_execDaumPostcode() {
+            document.getElementById("extraAddr").value = "";
+            document.getElementById("zonecode").value = "";
+            document.getElementById("addr").value = "";
+            document.getElementById("result").style.display = 'none';
+
+            var element_wrap = document.getElementById('wrap');
+            var currentScroll = Math.max(document.body.scrollTop, document.documentElement.scrollTop);
+            new daum.Postcode({
+                oncomplete: function(data) {
+                    var addr = ''; // 주소 변수
+                    var extraAddr = ''; // 참고항목 변수
+                    if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
+                        addr = data.roadAddress;
+                    } else { // 사용자가 지번 주소를 선택했을 경우(J)
+                        addr = data.jibunAddress;
+                    }
+                    if(data.userSelectedType === 'R'){
+                        if(data.bname !== '' && /[동|로|가]$/g.test(data.bname)){
+                            extraAddr += data.bname;
+                        }
+                        if(data.buildingName !== '' && data.apartment === 'Y'){
+                            extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+                        }
+                        if(extraAddr !== ''){
+                            extraAddr = ' (' + extraAddr + ')';
+                        }
+                        //alert("도로명 : " + extraAddr);
+                        document.getElementById("extraAddr").value = extraAddr;
+                    } else {
+                        //alert("도로명 주소가 아닙니다.");
+                        document.getElementById("extraAddr").value = "";
+                    }
+
+                    //alert("지역코드 : " + data.zonecode + ", 주소 : " + addr);
+                    document.getElementById("zonecode").value = data.zonecode;
+                    document.getElementById("addr").value = addr;
+                    element_wrap.style.display = 'none';
+                    document.body.scrollTop = currentScroll;
+                    document.getElementById("result").style.display = 'block';
+                },
+                onresize : function(size) {
+                    element_wrap.style.height = (size.height + 10) +'px';
+                },
+                width : '100%',
+                height : '100%'
+            }).embed(element_wrap);
+            element_wrap.style.display = 'block';
+        }
+        sample3_execDaumPostcode();
+    </script>
+  </body>
+</html>

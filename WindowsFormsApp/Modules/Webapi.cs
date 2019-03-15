@@ -243,7 +243,7 @@ namespace WindowsFormsApp
                         arr[j] = ja[j].ToString();
                     }
                         
-                    arrayList.Add(new rbSet(form, arr[0], arr[0], 40, 40+(30 * i), eh_btn));
+                    arrayList.Add(new rbSet(form, arr[0], arr[1], 110,30, 40, 40+(30 * i), eh_btn));
                 }
                 return arrayList;
             }
@@ -252,7 +252,7 @@ namespace WindowsFormsApp
                 return null;
             }
         }
-        public ArrayList Radio2(Control control, ArrayList list, EventHandler eh_btn)
+        public ArrayList Radio(Control control, ArrayList list, EventHandler eh_btn)
         {
             ArrayList arrayList = new ArrayList();
             try
@@ -266,7 +266,7 @@ namespace WindowsFormsApp
                     {
                         arr[j] = ja[j].ToString();
                     }
-                    arrayList.Add(new rbSet(control, arr[0], arr[0], 40, 40+(30*i), eh_btn));
+                    arrayList.Add(new rbSet(control, arr[0], arr[1],120,30, 40, 40+(30*i), eh_btn));
                     
                 }
                 return arrayList;

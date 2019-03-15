@@ -24,9 +24,10 @@ namespace WindowsFormsApp
         RadioButton rbutton;
         Hashtable ht;
         Webapi api;
-        Button next;
+        Button next,behind,add;
         btnSet bt1;
-        RadioButton button;
+        TextBox count;
+        ListView lv;
         public ChoiceForm()
         {
             InitializeComponent();
@@ -62,12 +63,12 @@ namespace WindowsFormsApp
             second.BackColor = Color.DimGray;
             head.Controls.Add(second);
 
-            pn1 = new pnSet(this, 150, 300, 550, 150);
+            pn1 = new pnSet(this, 200, 300, 550, 150);
             third = ct.panel(pn1);
             third.BackColor = Color.DeepSkyBlue;
             head.Controls.Add(third);
 
-            pn1 = new pnSet(this, 150, 300, 800, 150);
+            pn1 = new pnSet(this, 150, 300, 850, 150);
             fourth = ct.panel(pn1);
             fourth.BackColor = Color.Cornsilk;
             head.Controls.Add(fourth);
@@ -102,19 +103,8 @@ namespace WindowsFormsApp
             fl.TextAlign = ContentAlignment.MiddleCenter;
             first.Controls.Add(fl);
 
-            lb1 = new lbSet(this, "second", "중분류", 150, 30, 0, 0, 10);
-            sl = ct.label(lb1);
-            sl.Font = new Font("Verdana", 13.5f, FontStyle.Bold);
-            sl.BackColor = Color.Silver;
-            sl.TextAlign = ContentAlignment.MiddleCenter;
-            second.Controls.Add(sl);
-
-            lb1 = new lbSet(this, "third", "소분류", 150, 30, 0, 0, 10);
-            tl = ct.label(lb1);
-            tl.Font = new Font("Verdana", 13.5f, FontStyle.Bold);
-            tl.BackColor = Color.Silver;
-            tl.TextAlign = ContentAlignment.MiddleCenter;
-            third.Controls.Add(tl);
+            CreateLb(second, new lbSet(this, "second", "중분류", 150, 30, 0, 0, 10));
+            CreateLb(third, new lbSet(this, "third", "소분류", 200, 30, 0, 0, 10));
 
             lb1 = new lbSet(this, "ll", "수량", 150, 30, 0, 0, 10);
             ll = ct.label(lb1);
@@ -123,88 +113,96 @@ namespace WindowsFormsApp
             ll.TextAlign = ContentAlignment.MiddleCenter;
             fourth.Controls.Add(ll);
 
-            /*
-            rbSet rb = new rbSet(this, "test", "test", 100, 750);
-            RadioButton rbtn = ct.radio(rb);
-            head.Controls.Add(rbtn);
-            rbtn.Click += next_click;
-            */
-            bt1 = new btnSet(this, "next", "다음단계", 100, 50, 960, 750, test_Click);
+            bt1 = new btnSet(this, "next", "다음단계", 100, 50, 960, 750, Next_Click);
             next = ct.btn(bt1);
             head.Controls.Add(next);
-        }
-        private void next_click(object sender, EventArgs e)
-        {
-            
-            RadioButton btn = (RadioButton)sender;
 
-            MessageBox.Show(btn.Name+"!!");
-            //MessageBox.Show(_bNo);
-            ArrayList list = new ArrayList();
-            ht = new Hashtable();
-            ht.Add("spName", "pro_first");
-            ht.Add("no", "no:1" );
-            second.Controls.Clear();
-            list = api.Select("http://192.168.3.15:5000/pro_first", ht);
-            MessageBox.Show(list.Count.ToString());
-            if (list != null)
-            {
-                ArrayList arrayList = api.Radio2(second, list, second_Click);
-                for (int i = 0; i < arrayList.Count; i++)
-                {
-                    RadioButton button = ct.radio((rbSet)arrayList[i]);
-                    second.Controls.Add(button);
-                }
-            }
+            bt1 = new btnSet(this, "behind", "이전단계", 100, 50, 850, 750, Behind_Click);
+            behind = ct.btn(bt1);
+            head.Controls.Add(behind);
+
+            bt1 = new btnSet(this, "add","추가", 70, 30, 60, 80, Add_Click);
+            add = ct.btn(bt1);
+            fourth.Controls.Add(add);
+            //150 300
+            tbSet ts = new tbSet(this, "count", 60, 30, 45, 40);
+            count = ct.txtbox(ts);
+            count.Font = new Font("Verdana", 13.5f, FontStyle.Regular);
+            count.Multiline = false;
+            count.MaxLength = 2;
+            fourth.Controls.Add(count);
+
+            lvSet ls = new lvSet(this, "리스트뷰", 950, 200, 50, 500,null);
+            lv = ct.listview(ls);
+            lv.Columns.Add("대분류",200, HorizontalAlignment.Center);
+            lv.Columns.Add("중분류", 200, HorizontalAlignment.Center);
+            lv.Columns.Add("소분류", 300, HorizontalAlignment.Center);
+            lv.Columns.Add("수량", 100, HorizontalAlignment.Center);
+            lv.Columns.Add("삭제", 150, HorizontalAlignment.Center);
+            lv.Scrollable = false;
             
+            head.Controls.Add(lv);
         }
+
+        private void CreateLb(Control ctr, lbSet lb)
+        {
+            sl = ct.label(lb);
+            sl.Font = new Font("Verdana", 13.5f, FontStyle.Bold);
+            sl.BackColor = Color.Silver;
+            sl.TextAlign = ContentAlignment.MiddleCenter;
+            ctr.Controls.Add(sl);
+        }
+        
         ArrayList button_List;
             ArrayList button_List1 = new ArrayList();
 
-            private void first_view()
+        private void first_view()
         {
 
             api = new Webapi();
             ht = new Hashtable();
             ht.Add("spName", "pro_first");
-            ht.Add("no", "no:0" );
-            ArrayList list = api.Select("http://192.168.3.15:5000/pro_first", ht);
-            MessageBox.Show(list.Count.ToString());
+            ht.Add("Upno", 0 );
+            ArrayList list = api.Select(Program.URL + "/pro_first", ht);
             if (list != null)
             {
-                button_List = api.Radio(this, list, test_Click);
+                button_List = api.Radio(this, list, first_Click);
                 for (int i = 0; i < button_List.Count; i++)
                 {
-                    button = ct.radio((rbSet)button_List[i]);
-                    button_List1.Add(button);
-                    first.Controls.Add(button);
+                    RadioButton rButton = ct.radio((rbSet)button_List[i]);
+                    MessageBox.Show(rButton.Text);
+                    button_List1.Add(rButton);
+                    first.Controls.Add(rButton);
                 }
             }
         }
-        private void test_Click(object sender, EventArgs e)
+        private void Next_Click(object sender, EventArgs e)
         {
-            //RadioButton btn = (RadioButton)sender;
-            button = (RadioButton)button_List1[1];
-            MessageBox.Show(button.Name);
+            mf.step = 3;
+            this.Dispose();
         }
-
+        private void Behind_Click(object sender, EventArgs e)
+        {
+            mf.step = 1;
+            this.Dispose();
+        }
+        private void Add_Click(object sender, EventArgs e)
+        {
+            lv.Items.Add(count.Text, 4);
+        }
         private void first_Click(object sender, EventArgs e)
         {
-            RadioButton btn = (RadioButton)sender;
-
-            
-            MessageBox.Show("1");
+            RadioButton btn = (RadioButton)sender;            
             ArrayList list = new ArrayList();
             ht = new Hashtable();
             ht.Add("spName", "pro_first");
-            ht.Add("no", "no:"+btn.Name);
-            MessageBox.Show(ht["no"].ToString());
+            ht.Add("no", btn.Name);
             second.Controls.Clear();
-            list = api.Select("http://192.168.3.15:5000/pro_first", ht);
-            MessageBox.Show(list.Count.ToString());
+            CreateLb(second, new lbSet(this, "second", "중분류", 150, 30, 0, 0, 10));
+            list = api.Select(Program.URL + "/pro_first", ht);
             if (list != null)
             {
-                ArrayList arrayList = api.Radio2(second, list, second_Click);
+                ArrayList arrayList = api.Radio(second, list, second_Click);
                 for (int i = 0; i < arrayList.Count; i++)
                 {
                     RadioButton button = ct.radio((rbSet)arrayList[i]);
@@ -214,7 +212,23 @@ namespace WindowsFormsApp
         }
         private void second_Click(object sender, EventArgs e)
         {
-
+            RadioButton btn = (RadioButton)sender;
+            ArrayList list = new ArrayList();
+            ht = new Hashtable();
+            ht.Add("spName", "pro_first");
+            ht.Add("no", btn.Name);
+            third.Controls.Clear();
+            CreateLb(third, new lbSet(this, "third", "소분류", 200, 30, 0, 0, 10));
+            list = api.Select(Program.URL + "/pro_first", ht);
+            if (list != null)
+            {
+                ArrayList arrayList = api.Radio(third, list, null);
+                for (int i = 0; i < arrayList.Count; i++)
+                {
+                    RadioButton button = ct.radio((rbSet)arrayList[i]);
+                    third.Controls.Add(button);
+                }
+            }
         }
 
     }

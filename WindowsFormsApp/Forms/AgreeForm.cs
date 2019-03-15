@@ -131,7 +131,6 @@ namespace WindowsFormsApp
             btnSet bt1 = new btnSet(this, "next", "다음단계", 100, 50, 960, 750, btn_next_click);
             next = ct.btn(bt1);
             head.Controls.Add(next);
-            
         }
         private void check_all_click(object sender, EventArgs e)
         {
@@ -153,13 +152,8 @@ namespace WindowsFormsApp
         {
             if (service_check.Checked&& info_check.Checked&& apply_check.Checked)
             {
-                //this.Visible = false;
-                Information info = new Information();
-                info.MdiParent = ParentForm; // 자식1을 자식2를 위한 
-                info.WindowState = FormWindowState.Maximized;
-                info.FormBorderStyle = FormBorderStyle.None;
-                head.Controls.Add(info);
-                info.Show();
+                mf.step = 1;
+                this.Dispose();
             }
             else
             {

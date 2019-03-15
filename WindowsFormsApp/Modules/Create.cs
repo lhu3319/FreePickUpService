@@ -145,6 +145,11 @@ namespace WindowsFormsApp
             rb.Name = rs.Name;
             rb.Text = rs.Text;
             rb.Location = new Point(rs.PX, rs.PY);
+            rb.Size = new Size(rs.SX,rs.SY);
+            if(rs.eh_btn != null)
+            {
+                rb.Click += rs.eh_btn;
+            }            
             return rb;
         }
     }

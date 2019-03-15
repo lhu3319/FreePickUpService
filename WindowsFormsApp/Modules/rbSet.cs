@@ -12,35 +12,41 @@ namespace WindowsFormsApp
         Form form;
         Control control;
         string name, text;
-        int  pX, pY;
+        int  pX, pY,sX,sY;
         public EventHandler eh_btn;
 
-        public rbSet(Form form, string name,string text, int pX, int pY, EventHandler eh_btn)
+        public rbSet(Form form, string name,string text,int sX, int sY, int pX, int pY, EventHandler eh_btn)
         {
             this.form = form;
             this.name = name;
             this.text = text;
+            this.sX = sX;
+            this.sY = sY;
             this.pX = pX;
             this.pY = pY;
             this.eh_btn = eh_btn;
 
         }
-        public rbSet(Form form, string name, string text, int pX, int pY)
+        public rbSet(Form form, string name, string text,int sX,int sY, int pX, int pY)
         {
             this.form = form;
             this.name = name;
             this.text = text;
+            this.sX = sX;
+            this.sY = sY;
             this.pX = pX;
             this.pY = pY;
             
 
         }
-        public rbSet(Control control, string name, string text, int pX, int pY, EventHandler eh_btn)
+        public rbSet(Control control, string name, string text,int sX,int sY, int pX, int pY, EventHandler eh_btn)
         {
             this.form = null; // 예외처리
             this.control = control;
             this.name = name;
             this.text = text;
+            this.sX = sX;
+            this.sY = sY;
             this.pX = pX;
             this.pY = pY;
             this.eh_btn = eh_btn;
@@ -57,7 +63,14 @@ namespace WindowsFormsApp
         {
             get { return name; }
         }
-
+        public int SX
+        {
+            get { return sX; }
+        }
+        public int SY
+        {
+            get { return sY; }
+        }
         public int PX
         {
             get { return pX; }
