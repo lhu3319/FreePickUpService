@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -28,6 +29,7 @@ namespace WindowsFormsApp
         btnSet bt1;
         TextBox count;
         ListView lv;
+        ArrayList AddList = new ArrayList();
         public ChoiceForm()
         {
             InitializeComponent();
@@ -41,9 +43,9 @@ namespace WindowsFormsApp
         }
         private void ChoiceForm_Load(object sender, EventArgs e)
         {
+            api = new Webapi();
             View();
-            first_view();
-            
+            first_view();            
         }
 
         public void View()
@@ -132,17 +134,18 @@ namespace WindowsFormsApp
             count.MaxLength = 2;
             fourth.Controls.Add(count);
 
-            lvSet ls = new lvSet(this, "리스트뷰", 950, 200, 50, 500,null);
+            lvSet ls = new lvSet(this, "리스트뷰", 400, 200, 50, 500, lv_Click);
             lv = ct.listview(ls);
-            lv.Columns.Add("대분류",200, HorizontalAlignment.Center);
-            lv.Columns.Add("중분류", 200, HorizontalAlignment.Center);
-            lv.Columns.Add("소분류", 300, HorizontalAlignment.Center);
+            lv.FullRowSelect = true;
+            lv.Columns.Add("번호", 50, HorizontalAlignment.Center);
+            lv.Columns.Add("폐가전제품" ,250, HorizontalAlignment.Center);
             lv.Columns.Add("수량", 100, HorizontalAlignment.Center);
-            lv.Columns.Add("삭제", 150, HorizontalAlignment.Center);
-            lv.Scrollable = false;
-            
+            lv.Font = new Font("Verdana", 11.5f, FontStyle.Bold);
             head.Controls.Add(lv);
         }
+
+
+
 
         private void CreateLb(Control ctr, lbSet lb)
         {
@@ -156,10 +159,8 @@ namespace WindowsFormsApp
         ArrayList button_List;
             ArrayList button_List1 = new ArrayList();
 
-        private void first_view()
+        private void first_view() // 대분류 라디오버튼
         {
-
-            api = new Webapi();
             ht = new Hashtable();
             ht.Add("spName", "pro_first");
             ht.Add("Upno", 0 );
@@ -170,29 +171,71 @@ namespace WindowsFormsApp
                 for (int i = 0; i < button_List.Count; i++)
                 {
                     RadioButton rButton = ct.radio((rbSet)button_List[i]);
-                    MessageBox.Show(rButton.Text);
                     button_List1.Add(rButton);
                     first.Controls.Add(rButton);
                 }
             }
         }
-        private void Next_Click(object sender, EventArgs e)
-        {
-            mf.step = 3;
-            this.Dispose();
-        }
-        private void Behind_Click(object sender, EventArgs e)
-        {
-            mf.step = 1;
-            this.Dispose();
-        }
+        string name;
         private void Add_Click(object sender, EventArgs e)
         {
-            lv.Items.Add(count.Text, 4);
+            if (count.Text != null)
+            {
+                foreach (Control ctr in third.Controls)
+                {
+                    if (ctr.GetType().ToString() == "System.Windows.Forms.RadioButton")
+                    {
+                        RadioButton rb = (RadioButton)ctr;
+                        if (rb.Checked)
+                        {
+                            string 번호 = ctr.Name;
+                            string 폐가전제품 = ctr.Text;
+                            string 수량 = count.Text;
+
+                            if (lv.Items.Count > 0)
+                            {
+                                bool check = true;
+                                foreach (ListViewItem lvi in lv.Items)
+                                {
+                                    if (lvi.SubItems[0].Text == 번호)
+                                    {
+                                        int 변경수량 = Convert.ToInt32(lvi.SubItems[2].Text) + Convert.ToInt32(수량);
+                                        lvi.SubItems[2].Text = 변경수량.ToString();
+                                        check = false;
+                                        break;
+                                    }
+                                }
+
+                                if (check)
+                                {
+                                    lv.Items.Add(new ListViewItem(new string[] { 번호, 폐가전제품, 수량 }));
+                                }
+                            }
+                            else
+                            {
+                                lv.Items.Add(new ListViewItem(new string[] { 번호, 폐가전제품, 수량 }));
+                            }                            
+                        }
+                    }
+                }
+            }
         }
-        private void first_Click(object sender, EventArgs e)
+        
+        private void lv_Click(object sender, EventArgs e)
         {
-            RadioButton btn = (RadioButton)sender;            
+            ListView lv1 = (ListView)sender;
+            string 제품 = lv1.SelectedItems[0].SubItems[1].Text;
+            DialogResult dr = MessageBox.Show(string.Format("{0}를 목록에서 삭제하시겠습니까?",  제품), "한의 경고창", MessageBoxButtons.YesNo);
+            if(dr == DialogResult.Yes)
+            {
+                lv1.Items.Remove(lv1.SelectedItems[0]);
+            }
+        }
+
+        private void first_Click(object sender, EventArgs e) // 중분류 라디오버튼
+        {
+            RadioButton btn = (RadioButton)sender;
+            
             ArrayList list = new ArrayList();
             ht = new Hashtable();
             ht.Add("spName", "pro_first");
@@ -209,28 +252,115 @@ namespace WindowsFormsApp
                     second.Controls.Add(button);
                 }
             }
+            
         }
-        private void second_Click(object sender, EventArgs e)
+        
+        private void second_Click(object sender, EventArgs e) // 소분류 라디오버튼
         {
-            RadioButton btn = (RadioButton)sender;
+            RadioButton last = (RadioButton)sender;
+            
             ArrayList list = new ArrayList();
             ht = new Hashtable();
             ht.Add("spName", "pro_first");
-            ht.Add("no", btn.Name);
+            ht.Add("no", last.Name);
             third.Controls.Clear();
             CreateLb(third, new lbSet(this, "third", "소분류", 200, 30, 0, 0, 10));
             list = api.Select(Program.URL + "/pro_first", ht);
             if (list != null)
             {
-                ArrayList arrayList = api.Radio(third, list, null);
+                ArrayList arrayList = api.Radio(third, list, third_Click);
                 for (int i = 0; i < arrayList.Count; i++)
                 {
                     RadioButton button = ct.radio((rbSet)arrayList[i]);
                     third.Controls.Add(button);
                 }
             }
+            
+        }
+        private void third_Click(object sender, EventArgs e)
+        {
+            RadioButton btn = (RadioButton)sender;
+            name = btn.Text;
         }
 
+        private void Next_Click(object sender, EventArgs e)
+        {
+            if(lv.Items.Count > 0)
+            {
+                Label third = new Label();
+                Label fourth = new Label();
+                foreach (Control ctr in head.Controls)
+                {
+                    if (ctr.Name == "third")
+                    {
+                        ctr.BackColor = Color.Transparent;
+                        third = (Label)ctr;
+                    }
+
+                    if (ctr.Name == "fourth")
+                    {
+                        ctr.BackColor = Color.Beige;
+                        fourth = (Label)ctr;
+                        break;
+                    }
+                }
+                DialogResult dr = MessageBox.Show("등록하신 폐가전제품을 요청하시겠습니까?", "한의 경고창", MessageBoxButtons.YesNo);
+                if (dr == DialogResult.Yes)
+                {
+                    // 디비
+                    int check = 0;
+                    foreach (ListViewItem lvi in lv.Items)
+                    {
+                        JObject jo = new JObject();
+                        jo.Add("_Phone", mf.phone);
+                        jo.Add("_iNo", lvi.SubItems[0].Text);
+                        jo.Add("_cnt", lvi.SubItems[2].Text);
+                        jo.Add("_date", mf.date);
+                        Hashtable ht = new Hashtable();
+                        ht.Add("spName", "insert_Product");
+                        ht.Add("param", jo.ToString());
+
+                        string result = api.Post_Param(Program.URL + "/param_request_NonQuery", ht);
+                        JObject resultObject = JsonConvert.DeserializeObject<JObject>(result);
+                        foreach (JProperty jp in resultObject.Properties())
+                        {
+                            if (jp.Name == "state")
+                            {
+                                if (jp.Value.ToString() == "0")
+                                {
+                                    check++;
+                                }
+                            }
+                        }
+                    }
+                    if (check > 0)
+                    {
+                        MessageBox.Show("요청 오류 발생 건이 있습니다.");
+                    }
+                    mf.step = 4;
+                    this.Dispose();
+                }
+                else
+                {
+                    third.BackColor = Color.Beige;
+                    fourth.BackColor = Color.Transparent;
+                }
+            }
+            else
+            {
+                MessageBox.Show("폐가전제품을 등록하세요.");
+            }            
+        }
+        private void Behind_Click(object sender, EventArgs e)
+        {
+            for(int i = 0; i < t.Count; i++)
+            {
+                MessageBox.Show(t[i].ToString());
+            }
+            mf.step = 1;
+            this.Dispose();
+        }
+        ArrayList t = new ArrayList();
     }
 }
 

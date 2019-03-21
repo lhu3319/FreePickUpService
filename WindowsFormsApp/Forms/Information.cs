@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -29,6 +31,8 @@ namespace WindowsFormsApp
         MainForm mf;
         DateTimePicker date;
         string today = DateTime.Now.ToString("yyyy-MM-dd"); // 오늘날짜 비교용
+        Webapi api;
+
         //RichTextBox ;
         public Information()
         {
@@ -45,6 +49,7 @@ namespace WindowsFormsApp
 
         private void Information_Load(object sender, EventArgs e)
         {
+            api = new Webapi();
             View();
         }
         public void View()
@@ -230,8 +235,16 @@ namespace WindowsFormsApp
             elevator = ct.combobox(cb1);
             elevator.Font = new Font("Verdana", 11.5f);
             elevator.Text = ("엘레베이터 유무");
+            /*
             elevator.Items.Add("유");
             elevator.Items.Add("무");
+            */
+            Dictionary<string, string> dict = new Dictionary<string, string>();
+            dict.Add("Y", "유");
+            dict.Add("N", "무");
+            elevator.DataSource = new BindingSource(dict, null);
+            elevator.DisplayMember = "Value";
+            elevator.ValueMember = "Key";
             head.Controls.Add(elevator);
 
             DateSet ds1 = new DateSet(this, "date", 170, 30, 160, 650);
@@ -277,31 +290,80 @@ namespace WindowsFormsApp
             SearchAddrForm saf = new SearchAddrForm(this);
             saf.ShowDialog();
         }
+        
         private void next_click(object sender, EventArgs e)
         {
             string date_text = date.Text.Substring(0, 10);
+            
             if (name_box.Text == "")
             {
                 MessageBox.Show("이름을 입력해주세요.");
-                
-            }/*
-            else if (pnb_box1.Text == "" || pnb_box2.Text == "" || pnb_box3.Text == "")
+                return;
+            }
+            if (pnb_box1.Text == "" || pnb_box2.Text == "" || pnb_box3.Text == "")
             {
                 MessageBox.Show("휴대폰 번호를 입력해주세요");
+                return;
             }
-            else if (addr_box.Text == "" || road_box.Text == "" || detail_box.Text == "")
+            if (addr_box.Text == ""  || detail_box.Text == "")
             {
                 MessageBox.Show("주소를 입력해주세요");
+                return;
             }
-            else if(today == date_text)
+            if(today == date_text)
             {
                 MessageBox.Show("당일에는 예약이 불가능합니다");
-            }*/
+                return;
+            }
+
+            Hashtable param = new Hashtable();
+            string phone = string.Format("{0}{1}{2}", pnb_box1.Text, pnb_box2.Text, pnb_box3.Text);
+            JObject jo = new JObject();
+            jo.Add("_phone", phone);
+            param.Add("param", jo.ToString());
+            param.Add("spName", "person_check");
+            // 휴대폰번호로 기존 사용자 체크
+            string result = api.Post_Param(Program.URL + "/param_request", param);
+            JObject resultObject = JsonConvert.DeserializeObject<JObject>(result);
+            bool pCheck = true;
+            foreach(JProperty jp in resultObject.Properties())
+            {
+                if(jp.Name == "state")
+                {
+                    if(jp.Value.ToString() == "0")
+                    {
+                        pCheck = false;
+                    }
+                }
+            }
+            if (pCheck)
+            {
+                MessageBox.Show("기존 사용자 정보를 사용합니다.");
+            }
             else
             {
-                mf.step = 2;
-                this.Dispose();
+                param = new Hashtable();
+                param.Add("spName", "insert_info");
+                string address = string.Format("{0} {1}", addr_box.Text, detail_box.Text);
+                string number = string.Format("{0}{1}{2}", nb_box1.Text, nb_box2.Text, nb_box3.Text);
+                jo = new JObject();
+                jo.Add("_Name", name_box.Text);
+                jo.Add("_Phone", phone);
+                jo.Add("_Number", number);
+                jo.Add("_Addr", address);
+                jo.Add("_Home", home.Text);
+                jo.Add("_Elve", elevator.SelectedValue.ToString());
+                jo.Add("_Out", date_text);
+                jo.Add("_Memo", memo_box.Text);
+                param.Add("param", jo.ToString());
+                result = api.Post_Param(Program.URL + "/param_request_NonQuery", param);
+                MessageBox.Show(result);
+                MessageBox.Show("신규 사용자 등록이 정상 처리 되었습니다.");
             }
+            mf.phone = phone;
+            mf.date = date_text;
+            mf.step = 2;
+            this.Dispose();
         }
         private void behind_click(object sender, EventArgs e)
         {

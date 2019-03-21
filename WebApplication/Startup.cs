@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -30,13 +31,15 @@ namespace WebApplication
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            if (env.IsDevelopment())
+            var provider = new FileExtensionContentTypeProvider();
+            provider.Mappings[".exe"] = "application/vnd.microsoft.portable-executable";
+            app.UseStaticFiles(new StaticFileOptions
             {
-                app.UseDeveloperExceptionPage();
-            }
-
+                ContentTypeProvider = provider,
+            });
+            app.UseDeveloperExceptionPage();
             app.UseMvc();
-            app.UseStaticFiles();
+           // app.UseStaticFiles();
         }
     }
 }

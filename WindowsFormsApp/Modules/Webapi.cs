@@ -114,7 +114,7 @@ namespace WindowsFormsApp
             }
         }
 
-        public bool Post2(string url)
+        public bool Post(string url)
         {
             try
             {
@@ -136,7 +136,6 @@ namespace WindowsFormsApp
 
         public bool Post(string url, Hashtable ht)
         {
-            MessageBox.Show(url);
             try
             {
                 WebClient wc = new WebClient();
@@ -144,24 +143,25 @@ namespace WindowsFormsApp
 
                 foreach (DictionaryEntry data in ht)
                 {
-                    MessageBox.Show(string.Format("{0},{1}", data.Key.ToString(), data.Value.ToString()));
+                    //MessageBox.Show(string.Format("{0},{1}", data.Key.ToString(), data.Value.ToString()));
                     param.Add(data.Key.ToString(), data.Value.ToString());
                 }
 
                 //byte로 반환
                 byte[] result = wc.UploadValues(url, "POST", param);
+                
                 string resultStr = Encoding.UTF8.GetString(result);
                 MessageBox.Show(resultStr);
                 if ("1" == resultStr)
                 {
-                    MessageBox.Show("성공");
+                    //MessageBox.Show("성공");
+                    return true;
                 }
                 else
                 {
-                    MessageBox.Show("실패");
+                    //MessageBox.Show("실패");
+                    return false;
                 }
-
-                return true;
             }
             catch
             {
@@ -169,7 +169,25 @@ namespace WindowsFormsApp
             }
         }
 
-
+        public string Post_Param(string url, Hashtable ht)
+        {
+            try
+            {
+                WebClient wc = new WebClient();
+                NameValueCollection param = new NameValueCollection();  // Key : Value 형식
+                foreach (DictionaryEntry data in ht)
+                {
+                    param.Add(data.Key.ToString(), data.Value.ToString());
+                }
+                //byte로 반환
+                byte[] result = wc.UploadValues(url, "POST", param);
+                return Encoding.UTF8.GetString(result);
+            }
+            catch
+            {
+                return "";
+            }
+        }
 
         public ArrayList Select(string url, Hashtable ht)
         {

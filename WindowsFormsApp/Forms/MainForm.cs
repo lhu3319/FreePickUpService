@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-
+using WindowsFormsApp.Forms;
 namespace WindowsFormsApp
 {
     public partial class MainForm : Form
@@ -18,8 +18,9 @@ namespace WindowsFormsApp
         Button book, check;
         Panel head,body;
         Form form;
-        public int step = 0;
-
+        public int step = 4;
+        public string phone = "";
+        public string date = "";
         public MainForm() // size 1200, 900
         {
             InitializeComponent();
@@ -57,15 +58,26 @@ namespace WindowsFormsApp
             book = ct.btn(bs1);
             head.Controls.Add(book);
 
-            btnSet bs2 = new btnSet(this, "check", "예약조회·변경", 100, 100, 0, 200, btn_Book_click);
+            btnSet bs2 = new btnSet(this, "check", "예약조회·변경", 100, 100, 0, 200, btn_Check_click);
             check = ct.btn(bs2);
             head.Controls.Add(check);
+
+            CheckForm();
         }
             
 
             private void btn_Book_click(object sender, EventArgs e)
         {
+            phone = "";
             step = 0;
+            CheckForm();
+        }
+
+
+        private void btn_Check_click(object sender, EventArgs e)
+        {
+            phone = "";
+            step = 4;
             CheckForm();
         }
 
@@ -82,6 +94,9 @@ namespace WindowsFormsApp
                     break;
                 case 2:
                     form = new ChoiceForm(this);
+                    break;
+                case 4:
+                    form = new Check(this);
                     break;
                 default:
                     body.Controls.Clear();
